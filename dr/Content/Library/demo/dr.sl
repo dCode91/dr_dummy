@@ -129,8 +129,8 @@ flow:
           demo.substring:
             - origin_string: x
         navigate:
-          - SUCCESS: notify_SA_group_2
-          - FAILURE: notify_on_call_1
+          - SUCCESS: notify_SA_group_on_exchange_cluster_addition
+          - FAILURE: notify_on_call_for_exchange_cluster_addition
     - clone_destination_server:
         do:
           demo.substring:
@@ -145,26 +145,26 @@ flow:
         navigate:
           - SUCCESS: remove_from_exchange_cluster
           - FAILURE: clone_destination_server
-    - notify_on_call_1:
+    - notify_on_call_for_exchange_cluster_addition:
         do:
           demo.flow: []
         navigate:
           - SUCCESS: SUCCESS
-    - aknowledge_DR_event:
+    - acknowledge_DR_event:
         do:
           demo.substring:
             - origin_string: x
         navigate:
           - SUCCESS: SUCCESS
-          - FAILURE: on_failure
-    - notify_SA_group_2:
+          - FAILURE: notify_on_call_for_exchange_cluster_addition
+    - notify_SA_group_on_exchange_cluster_addition:
         do:
           demo.ssh_flow:
             - host: x
             - command: x
             - username: 'y'
         navigate:
-          - SUCCESS: aknowledge_DR_event
+          - SUCCESS: acknowledge_DR_event
           - FAILURE: on_failure
   results:
     - no_action_taken_pending_approval
@@ -206,16 +206,16 @@ extensions:
             port: SUCCESS
       email_approver:
         x: 480
-        'y': 120
+        'y': 160
         navigate:
           370c78b0-08d3-7c7a-c7b4-877530e47d76:
             targetId: b82ef243-af97-9920-67f1-449ff9292e51
             port: FAILURE
             vertices:
-              - x: 680
-                'y': 80
+              - x: 720
+                'y': 120
               - x: 760
-                'y': 80
+                'y': 120
       notify_on_call:
         x: 320
         'y': 320
@@ -224,22 +224,28 @@ extensions:
             targetId: f7d0b9d2-4bef-2722-cd51-f4920c9c9aec
             port: SUCCESS
       take_ownership_of_DR_event:
-        x: 80
-        'y': 120
-      aknowledge_DR_event:
-        x: 80
+        x: 40
+        'y': 160
+      waiting_for_approval:
+        x: 680
+        'y': 160
+        navigate:
+          9f05ae64-af66-610a-b21f-9efe2e866034:
+            targetId: b82ef243-af97-9920-67f1-449ff9292e51
+            port: SUCCESS
+      acknowledge_DR_event:
+        x: 40
         'y': 920
         navigate:
           a533c42a-abe6-ae0f-1b6d-00ae78c1d0da:
             targetId: 9cf62e0b-7e0e-20ba-9189-26bd9d37bc1a
             port: SUCCESS
-      waiting_for_approval:
-        x: 680
-        'y': 120
-        navigate:
-          9f05ae64-af66-610a-b21f-9efe2e866034:
-            targetId: b82ef243-af97-9920-67f1-449ff9292e51
-            port: SUCCESS
+          0146b1fb-cad2-2489-7f31-80b338573aa4:
+            vertices:
+              - x: 120
+                'y': 840
+            targetId: notify_on_call_for_exchange_cluster_addition
+            port: FAILURE
       notify_SA_group_on_ticket_updated:
         x: 960
         'y': 1000
@@ -255,6 +261,13 @@ extensions:
       compare_source_and_destination_configs:
         x: 400
         'y': 720
+      notify_on_call_for_exchange_cluster_addition:
+        x: 160
+        'y': 720
+        navigate:
+          3518ac5f-c661-925e-162d-a0aa1bcaf8d3:
+            targetId: 9cf62e0b-7e0e-20ba-9189-26bd9d37bc1a
+            port: SUCCESS
       validate_destination_availability:
         x: 1160
         'y': 720
@@ -281,12 +294,9 @@ extensions:
           0d71f03a-80df-5c03-4e68-604ae499467a:
             targetId: f7d0b9d2-4bef-2722-cd51-f4920c9c9aec
             port: FAILURE
-      notify_SA_group_2:
-        x: 280
-        'y': 920
       check_trouble_ticket_approval:
         x: 320
-        'y': 120
+        'y': 160
       network_check:
         x: 480
         'y': 320
@@ -294,6 +304,9 @@ extensions:
           f1e35412-947b-79f0-058b-c6e12606cc04:
             targetId: fa610718-a2f8-6826-13da-414c5cf2e851
             port: FAILURE
+      notify_SA_group_on_exchange_cluster_addition:
+        x: 280
+        'y': 920
       remove_from_exchange_cluster:
         x: 520
         'y': 520
@@ -306,13 +319,6 @@ extensions:
                 'y': 480
             targetId: disable_monitoring
             port: SUCCESS
-      notify_on_call_1:
-        x: 160
-        'y': 720
-        navigate:
-          3518ac5f-c661-925e-162d-a0aa1bcaf8d3:
-            targetId: 9cf62e0b-7e0e-20ba-9189-26bd9d37bc1a
-            port: SUCCESS
       update_CMDB:
         x: 800
         'y': 920
@@ -323,16 +329,16 @@ extensions:
       no_action_taken_pending_approval:
         b82ef243-af97-9920-67f1-449ff9292e51:
           x: 920
-          'y': 120
+          'y': 160
       diagnosed_network_issue:
         fa610718-a2f8-6826-13da-414c5cf2e851:
           x: 920
           'y': 320
       SUCCESS:
         9cf62e0b-7e0e-20ba-9189-26bd9d37bc1a:
-          x: 80
+          x: 40
           'y': 560
       no_action_taken_escalated:
         f7d0b9d2-4bef-2722-cd51-f4920c9c9aec:
-          x: 80
+          x: 40
           'y': 320
